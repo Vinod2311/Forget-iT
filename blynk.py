@@ -2,7 +2,6 @@
 import BlynkLib
 from sense_hat import SenseHat
 import time
-
 import blynk_config as conf
 
 BLYNK_AUTH = conf.BLYNK_AUTH_TOKEN
@@ -17,6 +16,7 @@ sense.clear()
 # register handler for virtual pin V1 write event
 @blynk.on("V0")
 def v3_write_handler(value):
+    
     buttonValue=value[0]
     print(f'Current button value: {buttonValue}')
     if buttonValue=="1":
@@ -24,11 +24,10 @@ def v3_write_handler(value):
     else:
         sense.clear()
 
-#def distance(value):
-
+blynk.run()
 #tmr_start_time = time.time()
 # infinite loop that waits for event
-while True:
-    exec(open("distance.py").read())
-    blynk.run()
-    time.sleep(1)
+#while True:
+#    exec(open("distance.py").read())
+#    blynk.run()
+    #time.sleep(1)
