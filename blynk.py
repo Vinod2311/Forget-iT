@@ -24,10 +24,10 @@ def v3_write_handler(value):
     else:
         sense.clear()
 
-blynk.run()
+#blynk.run()
 #tmr_start_time = time.time()
 # infinite loop that waits for event
-#while True:
-#    exec(open("distance.py").read())
-#    blynk.run()
+while True:
+    exec(open("distance.py").read())
+    blynk.run()
     #time.sleep(1)

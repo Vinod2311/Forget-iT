@@ -9,7 +9,7 @@ start_time = time.time()
 
 #Set bluetooth device. Default 0.
 dev_id = 0
-strength = 0
+strength = [0,0,0,0,0]
 
 #initialise SenseHAT
 sense = SenseHat()
@@ -23,20 +23,27 @@ except:
 	print ("Error accessing bluetooth")
 
 ScanUtility.hci_enable_le_scan(sock)
+
+def average_strength(input):
+	return sum(input)/len(input)
+	
+
 #Scans for iBeacons
 try:
 	#while True:
-		returnedList = ScanUtility.parse_events(sock, 100)
-		for item in returnedList:
-			strength = item['rssi']
+		for i in range(len(strength)):
+			returnedList = ScanUtility.parse_events(sock, 100)
+			for item in returnedList:
+				strength[i] = item['rssi']
+		
 			
 		current_time = time.time()
 		#def distance(value):
-		if strength > -50:
+		if average_strength(strength) > -50:
 			sense.clear(0,255,0)
-		elif strength < -60:
+		elif average_strength(strength) < -50:
 			sense.clear(255,0,0)
-		print(strength, " ",current_time - start_time)
+		print(average_strength(strength), " ",current_time - start_time)
 		
 except KeyboardInterrupt:
     pass
