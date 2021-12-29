@@ -6,27 +6,23 @@ import RPi.GPIO as GPIO
 import time
 import distance
 import logging
-import config
-#from dotenv import dotenv_values
+#import config
+from dotenv import dotenv_values
 import datetime
-#import pir
-
-#new_bluetooth_proximity = distance.bluetooth_proximity
-#new_pir = pir_sensor.pir
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(7,GPIO.IN)
-BLYNK_AUTH_TOKEN = config.BLYNK_AUTH_TOKEN
+#BLYNK_AUTH_TOKEN = config.BLYNK_AUTH_TOKEN
 
 #load MQTT configuration values from .env file
-#config = dotenv_values(".env")
+config = dotenv_values(".env")
   # initialize Blynk
-#blynk = BlynkLib.Blynk(config['BLYNK_AUTH_TOKEN'])
+blynk = BlynkLib.Blynk(config['BLYNK_AUTH_TOKEN'])
   #configure Logging
 logging.basicConfig(level=logging.INFO)
 # initialize Blynk
 
-blynk = BlynkLib.Blynk(BLYNK_AUTH_TOKEN)
+#blynk = BlynkLib.Blynk(BLYNK_AUTH_TOKEN)
 
 #initialise SenseHAT
 sense = SenseHat()
@@ -53,6 +49,7 @@ def bluetooth_sensor():
       #print(bluetooth_proximity)
       time = datetime.datetime.now().strftime("%H:%M:%S")
       blynk.log_event("ble", f"Bluetooth proximity detected @: {time}")
+      blynk.log_event("ble", f"Somebody has rang you doorbell at {time}")
   elif bluetooth_proximity==0: 
       #print(bluetooth_proximity,"no") 
       sense.clear(255,0,0)
@@ -64,13 +61,12 @@ def pir_sensor():
       blynk.virtual_write(1,1)
       print("detected")
       time = datetime.datetime.now().strftime("%H:%M:%S")
-      blynk.log_event("pir", "PIR proximity detected @: {time}")
+      blynk.log("pir", "PIR proximity detected @: {time}")
       blynk.log_event("pir")
   else:
       blynk.virtual_write(1,0)
       print(GPIO.input(7),"not detected")
 
-#bluetooth_sensor()
 
 # infinite loop 
 while True:
@@ -81,4 +77,6 @@ while True:
     pir_sensor()
     #print("stupid")
     blynk.run()
+    #blynk.log_event("ble")
+    #print("hello")
     time.sleep(1)
