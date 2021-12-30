@@ -6,6 +6,7 @@ import time
 import distance
 import logging
 from dotenv import dotenv_values
+#import uploadFile
 
 
 #Setup pir sensor for input data on GPIO pin 7
@@ -18,6 +19,8 @@ sense = SenseHat()
 #Initialize global variables
 bluetooth_proximity = 0
 pir_proximity = 0
+filename = "file_0"
+counter = 0
 
 #Load configuration values from .env file
 config = dotenv_values(".env")
@@ -64,9 +67,14 @@ def pir_sensor():
 #Calculate whether it is safe to leave
 @blynk.on("Safe to leave")
 def safe_to_leave():
+  global counter
   if bluetooth_proximity==1 and pir_proximity==1:
     blynk.virtual_write(2,1)
     sense.clear(0,255,0)
+    counter += 1
+    if counter==10:
+      #uploadFile.upload(filename)
+      counter = 0
   else:
     blynk.virtual_write(2,0)
     sense.clear(255,0,0)
