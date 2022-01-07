@@ -6,7 +6,7 @@ import time
 import distance
 import logging
 from dotenv import dotenv_values
-#import uploadFile
+import uploadFile
 
 
 #Setup pir sensor for input data on GPIO pin 7
@@ -38,9 +38,9 @@ def bluetooth_sensor():
   global bluetooth_proximity
   distance.distance_calculated(strength)
   average_strength= sum(strength)/len(strength) 
-  if average_strength > -50:
+  if average_strength > -60:
     bluetooth_proximity = 1
-  elif average_strength < -50:
+  elif average_strength < -60:
     bluetooth_proximity = 0
   print("ble strength: ",strength, " ble detection ", bluetooth_proximity)
   
@@ -72,8 +72,8 @@ def safe_to_leave():
     blynk.virtual_write(2,1)
     sense.clear(0,255,0)
     counter += 1
-    if counter==10:
-      #uploadFile.upload(filename)
+    if counter==20:
+      uploadFile.upload(filename)
       counter = 0
   else:
     blynk.virtual_write(2,0)
@@ -86,4 +86,4 @@ while True:
     pir_sensor()
     safe_to_leave()
     blynk.run()
-    time.sleep(1)
+    time.sleep(0.5)
