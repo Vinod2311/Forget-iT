@@ -6,7 +6,7 @@ import time
 import distance
 import logging
 from dotenv import dotenv_values
-import uploadFile
+#import uploadFile
 
 
 #Setup pir sensor for input data on GPIO pin 7
@@ -73,7 +73,7 @@ def safe_to_leave():
     sense.clear(0,255,0)
     counter += 1
     if counter==20:
-      uploadFile.upload(filename)
+      #uploadFile.upload(filename)
       counter = 0
   else:
     blynk.virtual_write(2,0)
